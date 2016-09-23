@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/malirod/pylua.svg?branch=develop)](https://travis-ci.org/malirod/pylua)
+
 # pylua
 Example of binding between python and lua
 
