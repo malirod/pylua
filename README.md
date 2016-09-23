@@ -1,14 +1,22 @@
+[![Build Status](https://travis-ci.org/malirod/pylua.svg?branch=master)](https://travis-ci.org/malirod/pylua)
+
 # pylua
 Example of binding between python and lua
+
+##Platform
+
+Ubuntu 16.04 LTS
 
 ##Prerequisite
 - python 2.7
 
-`sudo apt-get install python2.7-dev python-pip`
+`sudo apt install python2.7-dev python-pip`
 
 - flake8
 
-sudo apt-get install python-flake8
+`sudo pip install flake8`
+
+usage: `flake8 <file to check>`
 
 - virtualenv
 
@@ -20,7 +28,7 @@ sudo apt-get install python-flake8
 
 - lua 5.2
 
-`sudo apt-get install liblua5.2 liblua5.2-dev`
+`sudo apt install liblua5.2 liblua5.2-dev`
 
 ##Setup
 All further steps are performed in the project root
