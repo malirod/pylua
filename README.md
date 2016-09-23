@@ -5,7 +5,7 @@ Example of binding between python and lua
 
 ##Platform
 
-Ubuntu 16.04 LTS
+Ubuntu 14.04 LTS, 16.04 LTS
 
 ##Prerequisite
 - python 2.7
