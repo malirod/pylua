@@ -59,26 +59,6 @@ EOF
     exit 1
 fi
 
-TEXT_DEFAULT="\\033[0;39m"
-TEXT_INFO="\\033[1;32m"
-TEXT_ERROR="\\033[1;31m"
-TEXT_UNDERLINE="\\0033[4m"
-TEXT_BOLD="\\0033[1m"
+tools/infrastructure/checkstyle.sh --cached
 
-# check for odd whitespace
-git diff --check --cached --color
-if [ "$?" -ne "0" ]; then
-    echo -e "$TEXT_ERROR" "Your changes introduce whitespace errors" "$TEXT_DEFAULT"
-    exit 1
-fi
-
-# Auto-check for pep8 in python code
-PYTHON_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -e '\.py$')
-
-if [ -n "$PYTHON_FILES" ]; then
-    flake8 $PYTHON_FILES
-    if [ "$?" -ne "0" ]; then
-        echo -e "$TEXT_ERROR" "Flake8 reports about the issues in the python scripts" "$TEXT_DEFAULT"
-        exit 2
-    fi
-fi
+exit $?
