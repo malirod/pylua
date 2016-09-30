@@ -10,13 +10,20 @@ Ubuntu 14.04 LTS, 16.04 LTS
 ##Prerequisite
 - python 2.7
 
-`sudo apt install python2.7-dev python-pip`
+`sudo apt-get install python2.7-dev python-pip`
 
 - flake8
 
 `sudo pip install flake8`
 
 usage: `flake8 <file to check>`
+
+- PyLint
+
+`sudo apt-get install pylint`
+
+usage(from project root to use config): `pylint <file to check>`
+
 
 - virtualenv
 
@@ -28,7 +35,7 @@ usage: `flake8 <file to check>`
 
 - lua 5.2
 
-`sudo apt install liblua5.2 liblua5.2-dev`
+`sudo apt-get install liblua5.2 liblua5.2-dev`
 
 ##Setup
 All further steps are performed in the project root
