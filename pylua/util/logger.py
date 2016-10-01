@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
-from pylue.settings import LOG_CONFIG
+from pylua.settings import LOG_CONFIG
 
 
 def init_logging():

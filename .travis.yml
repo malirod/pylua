@@ -3,9 +3,8 @@ sudo: required
 python:
     - "2.7"
 before_install:
-    - sudo apt-get install fabric liblua5.2 liblua5.2-dev
+    - sudo apt-get install fabric liblua5.2 liblua5.2-dev pylint
 install:
-    - pip install flake8
     - pip install -r requirements.txt
 script:
     - ./tools/infrastructure/checkstyle.sh
