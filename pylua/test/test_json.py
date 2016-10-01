@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class TestJson:
+class TestJson(object):
 
     _JSON_STRING = '''{
         "IntParam": 10,
@@ -27,15 +27,16 @@ class TestJson:
         assert self._json_obj is not None
         assert isinstance(self._json_obj, dict)
 
-    def teardown(self):
+    @classmethod
+    def teardown(cls):
         logger.debug('Teardown')
 
     @classmethod
-    def setup_class(self):
+    def setup_class(cls):
         pass
 
     @classmethod
-    def teardown_class(self):
+    def teardown_class(cls):
         pass
 
     def test_int_param_py(self):
