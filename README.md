@@ -12,12 +12,6 @@ Ubuntu 14.04 LTS, 16.04 LTS
 
 `sudo apt-get install python2.7-dev python-pip`
 
-- flake8
-
-`sudo pip install flake8`
-
-usage: `flake8 <file to check>`
-
 - PyLint
 
 `sudo apt-get install pylint`
