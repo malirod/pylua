@@ -2,6 +2,10 @@ language: python
 sudo: required
 python:
     - "2.7"
+branches:
+  only:
+    - master
+    - develop
 before_install:
     - sudo apt-get install fabric liblua5.2 liblua5.2-dev pylint
 install:
