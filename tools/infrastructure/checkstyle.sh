@@ -10,6 +10,28 @@ TEXT_UNDERLINE="\\0033[4m"
 TEXT_BOLD="\\0033[1m"
 
 ##################################################################
+### Check for python version and script encoding
+##################################################################
+
+PYTHON_FILES_NUMBER=$(git diff --name-only --cached | grep -e '\.py$' | wc -l)
+
+PYTHON_VERSION="python2$"
+PYTHON_VERSION_MATCHES=$(head -n1 $(git diff --name-only --cached | grep -e '\.py$') | grep -i $PYTHON_VERSION | wc -l)
+
+if [ "$PYTHON_VERSION_MATCHES" -ne "$PYTHON_FILES_NUMBER" ]; then
+    echo -e "${TEXT_ERROR}Some python file(s) have wrong shebang. Expected is:${TEXT_DEFAULT} ${TEXT_BOLD} $PYTHON_VERSION ${TEXT_DEFAULT}"
+    exit 2
+fi
+
+PYTHON_ENCODING="utf-8"
+PYTHON_CODE_PAGE_MATCHES=$(file --mime-encoding $(git diff --name-only --cached | grep -e '\.py$') | grep -i $PYTHON_ENCODING | wc -l)
+
+if [ "$PYTHON_CODE_PAGE_MATCHES" -ne "$PYTHON_FILES_NUMBER" ]; then
+    echo -e "${TEXT_ERROR}Some python file(s) have wrong encoding. Expected is:${TEXT_DEFAULT} ${TEXT_BOLD} $PYTHON_ENCODING ${TEXT_DEFAULT}"
+    exit 2
+fi
+
+##################################################################
 ### Check for odd whitespace
 ##################################################################
 
