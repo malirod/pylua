@@ -1,7 +1,13 @@
 #!/bin/bash
 
 COMMITS_RANGE=$1
-echo "Processing commits range: $COMMITS_RANGE"
+
+if [ -n "$COMMITS_RANGE" ]; then
+  echo "Processing commits range: $COMMITS_RANGE"
+else
+  echo "No commits provided"
+  exit 0
+fi
 
 TEXT_DEFAULT="\\033[0;39m"
 TEXT_INFO="\\033[1;32m"
