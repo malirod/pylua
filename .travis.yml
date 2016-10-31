@@ -11,5 +11,5 @@ before_install:
 install:
     - pip install -r requirements.txt
 script:
-    - ./tools/infrastructure/checkstyle.sh
+    - ./tools/infrastructure/checkstyle.sh $TRAVIS_COMMIT_RANGE
     - fab test_all
