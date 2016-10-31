@@ -55,7 +55,13 @@ To run specific test or test case use
 
 `fab run_test:name=<file>:<Test_Case>.<test_method>`
 
-##Python & Lua binding
-Binding is implemented with help of [lupa library](https://pypi.python.org/pypi/lupa)
+##Code validation
+Style check is performed with script `./tools/infrastructure/checkstyle.sh`
 
-Read it's manual to know how it works.
+Usage
+
+`./tools/infrastructure/checkstyle.sh <begin_sha>..<end_sha>`
+
+e.g.
+
+`./tools/infrastructure/checkstyle.sh 6c18cbb..HEAD`
