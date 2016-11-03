@@ -64,6 +64,8 @@ echo -e "$TEXT_INFO" "PASSED" "$TEXT_DEFAULT"
 echo -e "$TEXT_INFO" "Checking python style with pylint" "$TEXT_DEFAULT"
 
 PYTHON_FILES=$(git diff $COMMITS_RANGE --name-only --diff-filter=ACM | grep -e "\.py$")
+echo -e "$TEXT_DEFAULT" "The following files will be processed" "$TEXT_DEFAULT"
+echo -e "$TEXT_DEFAULT" $PYTHON_FILES "$TEXT_DEFAULT"
 
 if [ -n "$PYTHON_FILES" ]; then
     pylint --rcfile=.pylintrc $PYTHON_FILES
