@@ -21,20 +21,37 @@ def sec_to_msec(seconds):
     return seconds*milliseconds_in_second
 
 
+
 class PyTimer(object):
 
-    def __init__(self, task, interval):
+    def __init__(self, task, interval, multishot=False, autostart=False):
+        self._multishot = multishot
         self._task = task
         self._interfal = msec_to_sec(interval)
-        self._timer = threading.Timer(self._interfal, self._task)
+        self._is_runnning = False
+        self._timer = None
+        if autostart:
+            self.start()
+
+    def _run_task(self):
+        if self._multishot:
+            self._is_runnning = False
+        self.start()
+        self._task()
+
+    def _run_timer(self):
+        self._timer = threading.Timer(self._interfal, self._run_task)
+        self._timer.start()
+        self._is_runnning = True
 
     def start(self):
-        self._timer.start()
+        if not self._is_runnning:
+            self._run_timer()
 
     def stop(self):
+        self._is_runnning = False
         self._timer.cancel()
 
     def reset(self):
         self._timer.cancel()
-        self._timer = threading.Timer(self._interfal, self._task)
-        self._timer.start()
+        self._run_timer()
