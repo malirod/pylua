@@ -1,8 +1,7 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import os
-from fabric.api import local, task
+from fabric.api import local, task # pylint: disable=import-error
 from pylua.settings import LOG_CONFIG
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -20,9 +19,9 @@ def test_all():
 @task
 def run_test(name=None):
     if name is None:
-        print 'Usage: fab run_test:name=<file>:<Test_Case>.<test_method>'
-        print ('Sample: fab run_test:name={}/test_json.py:TestJson.'
-               'test_int_param_py'.format(TESTS_DIR))
+        print('Usage: fab run_test:name=<file>:<Test_Case>.<test_method>')
+        print('Sample: fab run_test:name={}/test_json.py:TestJson.'
+              'test_int_param_py'.format(TESTS_DIR))
         return
     local('nosetests -vv -s --with-timer --log-config={} {}'.format(
         LOG_CONFIG_PATH, name))

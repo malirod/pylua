@@ -1,15 +1,18 @@
 language: python
 sudo: required
 python:
-    - "2.7"
+    - "3.5"
 branches:
   only:
     - master
     - develop
 before_install:
-    - sudo apt-get install fabric liblua5.2 liblua5.2-dev
+    - sudo apt-get install -y fabric liblua5.2 liblua5.2-dev python3-pip
+    - pip3 install --upgrade pip
 install:
-    - pip install -r requirements.txt
+    - pip3 install -r requirements.txt
 script:
+    - pip --version
+    - python --version
     - ./tools/infrastructure/checkstyle.sh $TRAVIS_COMMIT_RANGE
     - fab test_all

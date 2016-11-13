@@ -8,20 +8,15 @@ Example of binding between python and lua
 Ubuntu 14.04 LTS, 16.04 LTS
 
 ##Prerequisite
-- python 2.7
+- python 3.5.2
 
-`sudo apt-get install python2.7-dev python-pip`
+`sudo apt-get install python3-dev python3-pip python3-venv`
 
 - PyLint
 
 `sudo apt-get install pylint`
 
 usage(from project root to use config): `pylint <file to check>`
-
-
-- virtualenv
-
-`sudo pip install virtualenv`
 
 - fabric
 
@@ -32,19 +27,21 @@ usage(from project root to use config): `pylint <file to check>`
 `sudo apt-get install liblua5.2 liblua5.2-dev`
 
 ##Setup
+
 All further steps are performed in the project root
+
+Create virtual environment
+
+```
+. venv/bin/activate
+pip3 install --upgrade pip
+pip install wheel
+pip install -r requirements.txt
+
 
 Install git hooks
 
 `python ./tools/infrastructure/install_hooks.py`
-
-Create virtual environment
-
-`virtualenv venv`
-
-`. ./venv/bin/activate`
-
-`pip install -r requirements.txt`
 
 ##Usage
 To run all tests run

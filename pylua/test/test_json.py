@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import json
@@ -51,7 +50,7 @@ class TestJson(object):
     def test_string_param_py(self):
         assert 'StrParam' in self._json_obj
         value = self._json_obj['StrParam']
-        assert isinstance(value, basestring)
+        assert isinstance(value, str)
         assert value == 'TestString'
 
     def test_string_param_lua(self):
@@ -81,7 +80,7 @@ class TestJson(object):
         assert param == 11
         assert 'ObjStrParam' in value
         param = value['ObjStrParam']
-        assert isinstance(param, basestring)
+        assert isinstance(param, str)
         assert param == 'ObjTestString'
 
     def test_obj_param_lua(self):
