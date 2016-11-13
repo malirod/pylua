@@ -21,10 +21,10 @@ fi
 
 echo -e "$TEXT_INFO" "Checking script encoding" "$TEXT_DEFAULT"
 
-PYTHON_FILES_NUMBER=$(git diff $COMMITS_RANGE --name-only | grep -e '\.py$' | wc -l)
+PYTHON_FILES_NUMBER=$(git diff $COMMITS_RANGE --name-only -M | grep -e '\.py$' | wc -l)
 if [ "$PYTHON_FILES_NUMBER" -ne "0" ]; then
     PYTHON_ENCODING_HEADER="utf-8"
-    PYTHON_CODE_PAGE_MATCHES=$(head -n2 $(git diff $COMMITS_RANGE --name-only | grep -e '\.py$') | grep -i $PYTHON_ENCODING_HEADER | wc -l)
+    PYTHON_CODE_PAGE_MATCHES=$(head -n2 $(git diff $COMMITS_RANGE --name-only -M | grep -e '\.py$') | grep -i $PYTHON_ENCODING_HEADER | wc -l)
 
     if [ "$PYTHON_CODE_PAGE_MATCHES" -ne "$PYTHON_FILES_NUMBER" ]; then
         echo -e "${TEXT_ERROR}Some python file(s) have wrong encoding. Expected is:${TEXT_DEFAULT} ${TEXT_BOLD} $PYTHON_ENCODING_HEADER ${TEXT_DEFAULT}"
