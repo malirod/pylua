@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 """
@@ -74,17 +73,19 @@ class TestPyTimer(object):
 
     def _multishot_task(self):
         self._shot_counter = self._shot_counter + 1
+        if self._shot_counter >= 3:
+            self._event.set()
 
     def test_multishot_timer(self):
-        timer = pylua.timer.PyTimer(self._multishot_task, interval=100, multishot=True)
+        timer = pylua.timer.PyTimer(self._multishot_task, interval=30, multishot=True)
         timer.start()
-        self._wait_event(timeout=700)
+        self._wait_event()
         timer.stop()
-        assert self._shot_counter == 6
+        assert self._shot_counter == 3
 
     def test_autostart_multishot_timer(self):
         timer = pylua.timer.PyTimer(self._multishot_task,
-                                    interval=100, multishot=True, autostart=True)
-        self._wait_event(timeout=700)
+                                    interval=30, multishot=True, autostart=True)
+        self._wait_event()
         timer.stop()
-        assert self._shot_counter == 6
+        assert self._shot_counter == 3

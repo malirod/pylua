@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 """
@@ -19,7 +18,6 @@ def sec_to_msec(seconds):
     milliseconds_in_second = 1000.0
     assert seconds is not None
     return seconds*milliseconds_in_second
-
 
 
 class PyTimer(object):
