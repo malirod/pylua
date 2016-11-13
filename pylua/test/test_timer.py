@@ -7,7 +7,7 @@ timer module
 
 import timeit
 import threading
-import pylua.timer
+from pylua.timer import Timer, msec_to_sec
 
 class TestPyTimer(object):
 
@@ -23,11 +23,11 @@ class TestPyTimer(object):
 
     def _wait_event(self, timeout=None):
         if timeout is not None:
-            timeout = pylua.timer.msec_to_sec(timeout)
+            timeout = msec_to_sec(timeout)
         self._event.wait(timeout)
 
     def _run_timer(self):
-        timer = pylua.timer.PyTimer(self._timer_task, self._interval)
+        timer = Timer(self._timer_task, self._interval)
         self._task_is_run = False
         started = timeit.default_timer()
         self._event.clear()
@@ -35,7 +35,7 @@ class TestPyTimer(object):
         self._wait_event()
         assert self._task_is_run is True, "Task wasn't run"
         assert (timeit.default_timer() - started) > (
-            pylua.timer.msec_to_sec(self._interval)), "Timer doesn't work correctly"
+            msec_to_sec(self._interval)), "Timer doesn't work correctly"
 
     def test_start_timer(self):
         self._run_timer()
@@ -46,7 +46,7 @@ class TestPyTimer(object):
 
     def test_stop_timer(self):
         self._task_is_run = False
-        timer = pylua.timer.PyTimer(self._timer_task, self._interval)
+        timer = Timer(self._timer_task, self._interval)
         wait_time = 100  # wait_time in milliseconds
         self._event.clear()
         timer.start()
@@ -57,7 +57,7 @@ class TestPyTimer(object):
     def test_reset_timer(self):
         self._task_is_run = False
         interval = 600  # interval in milliseconds
-        timer = pylua.timer.PyTimer(self._timer_task, interval)
+        timer = Timer(self._timer_task, interval)
         wait_time = 100  # wait_time in milliseconds
         self._event.clear()
         timer.start()
@@ -69,7 +69,7 @@ class TestPyTimer(object):
         self._wait_event()
         assert self._task_is_run is True, "Reset doesn't work"
         assert (timeit.default_timer() - reseted) > (
-            pylua.timer.msec_to_sec(interval)), "Timer doesn't work correctly"
+            msec_to_sec(interval)), "Timer doesn't work correctly"
 
     def _multishot_task(self):
         self._shot_counter = self._shot_counter + 1
@@ -77,15 +77,15 @@ class TestPyTimer(object):
             self._event.set()
 
     def test_multishot_timer(self):
-        timer = pylua.timer.PyTimer(self._multishot_task, interval=30, multishot=True)
+        timer = Timer(self._multishot_task, interval=30, multishot=True)
         timer.start()
         self._wait_event()
         timer.stop()
         assert self._shot_counter == 3
 
     def test_autostart_multishot_timer(self):
-        timer = pylua.timer.PyTimer(self._multishot_task,
-                                    interval=30, multishot=True, autostart=True)
+        timer = Timer(self._multishot_task,
+                      interval=30, multishot=True, autostart=True)
         self._wait_event()
         timer.stop()
         assert self._shot_counter == 3
