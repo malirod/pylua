@@ -12,7 +12,7 @@ LOG_CONFIG_PATH = os.path.join(ROOT_DIR, SRC_DIR, LOG_CONFIG)
 
 @task
 def test_all():
-    local('nosetests -vv --with-timer {} --log-config={}'.format(
+    local('nosetests -vv -s --with-timer {} --log-config={}'.format(
         TESTS_DIR, LOG_CONFIG_PATH))
 
 
