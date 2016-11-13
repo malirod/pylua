@@ -20,6 +20,7 @@ class TestPyTimer(object):
         self._interval = 50  # interval in milliseconds
         self._task_is_run = False
         self._event = threading.Event()
+        self._shot_counter = 0
 
     def _wait_event(self, timeout=None):
         if timeout is not None:
@@ -70,3 +71,20 @@ class TestPyTimer(object):
         assert self._task_is_run is True, "Reset doesn't work"
         assert (timeit.default_timer() - reseted) > (
             pylua.timer.msec_to_sec(interval)), "Timer doesn't work correctly"
+
+    def _multishot_task(self):
+        self._shot_counter = self._shot_counter + 1
+
+    def test_multishot_timer(self):
+        timer = pylua.timer.PyTimer(self._multishot_task, interval=100, multishot=True)
+        timer.start()
+        self._wait_event(timeout=700)
+        timer.stop()
+        assert self._shot_counter == 6
+
+    def test_autostart_multishot_timer(self):
+        timer = pylua.timer.PyTimer(self._multishot_task,
+                                    interval=100, multishot=True, autostart=True)
+        self._wait_event(timeout=700)
+        timer.stop()
+        assert self._shot_counter == 6
