@@ -28,7 +28,6 @@ def load_lua_script(lua_script_name):
 
 
 def eval_lua_script(lua_script):
-    print(lua_script)
     lua_runtime = get_lua_runtime()
     return lua_runtime.eval(lua_script)
 

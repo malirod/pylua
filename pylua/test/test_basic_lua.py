@@ -5,6 +5,22 @@ from lupa import LuaRuntime
 from pylua.lua import eval_lua_script, exec_lua_script, load_lua_script
 
 
+def create_data_producer(data):
+    result = DataProducer(data)
+    return result
+
+
+class DataProducer(object):
+
+    def __init__(self, initial_data):
+        self._data = initial_data
+
+    def add_to_data(self, addition):
+        self._data += addition
+
+    def get_data(self):
+        return self._data
+
 class TestLuaBasic(object):
 
     def __init__(self):
@@ -64,7 +80,23 @@ class TestLuaBasic(object):
                 return result
             end
             '''
-        lua_func1 = eval_lua_script(lua_code)
-        assert lua_func1(5, 10) == 15
-        lua_func2 = eval_lua_script(load_lua_script('basic'))
-        assert lua_func2(5, 10) == 15
+        lua_func_local = eval_lua_script(lua_code)
+        assert lua_func_local(5, 10) == 15
+        lua_func_loaded = eval_lua_script(load_lua_script('basic'))
+        assert lua_func_loaded(6, 10) == 16
+
+    def test_feed_python_object_to_lua(self):
+        data_producer = create_data_producer('aaa')
+        data_producer.add_to_data('bbb')
+        assert data_producer.get_data() == 'aaabbb'
+        self._lua_runtime.globals()['create_data_producer'] = create_data_producer
+        lua_code = '''\
+            function test()
+                local data_producer = create_data_producer('nnn')
+                data_producer.add_to_data('zzz')
+                return data_producer.get_data()
+            end
+            return test()
+            '''
+        result = self._lua_runtime.execute(lua_code)
+        assert result == 'nnnzzz'
