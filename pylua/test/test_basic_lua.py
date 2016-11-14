@@ -21,6 +21,16 @@ class DataProducer(object):
     def get_data(self):
         return self._data
 
+
+class TaskExecutor(object): # pylint: disable=too-few-public-methods
+
+    def __init__(self, callback):
+        self._callback = callback
+
+    def run(self):
+        self._callback()
+
+
 class TestLuaBasic(object):
 
     def __init__(self):
@@ -100,3 +110,24 @@ class TestLuaBasic(object):
             '''
         result = self._lua_runtime.execute(lua_code)
         assert result == 'nnnzzz'
+
+    def test_callback_in_lua(self):
+        py_data = None
+        def py_callback():
+            nonlocal py_data
+            py_data = 'aaa'
+        task_executor = TaskExecutor(py_callback)
+        task_executor.run()
+        assert py_data == 'aaa'
+        self._lua_runtime.globals()['TaskExecutor'] = TaskExecutor
+        lua_code = '''\
+            function test()
+                local lua_data = 'zzz'
+                local task_executor = TaskExecutor(function() lua_data = 'bbb' end)
+                task_executor.run()
+                return lua_data
+            end
+            return test()
+            '''
+        result = self._lua_runtime.execute(lua_code)
+        assert result == 'bbb'
