@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Module implements wrapper of python
-timer. Wrapper allows to use timer with milliseconds
-"""
-
-import threading
+import asyncio
 
 
 def msec_to_sec(milliseconds):
@@ -22,34 +17,33 @@ def sec_to_msec(seconds):
 
 class Timer(object):
 
-    def __init__(self, task, interval, multishot=False, autostart=False):
+    def __init__(self, task, interval, multishot=False, loop=None):
         self._multishot = multishot
         self._task = task
-        self._interfal = msec_to_sec(interval)
-        self._is_runnning = False
-        self._timer = None
-        if autostart:
-            self.start()
+        self._interval = msec_to_sec(interval)
+        self._handler = None
+        self._loop = loop
+        if self._loop is None:
+            self._loop = asyncio.get_event_loop()
 
     def _run_task(self):
         if self._multishot:
-            self._is_runnning = False
-        self.start()
+            self.start()
         self._task()
 
-    def _run_timer(self):
-        self._timer = threading.Timer(self._interfal, self._run_task)
-        self._timer.start()
-        self._is_runnning = True
+    def _run(self):
+        self._handler = self._loop.call_later(self._interval, self._run_task)
 
     def start(self):
-        if not self._is_runnning:
-            self._run_timer()
+        if self._handler is not None:
+            self.stop()
+        self._run()
 
     def stop(self):
-        self._is_runnning = False
-        self._timer.cancel()
+        if self._handler is not None:
+            self._handler.cancel()
+            self._handler = None
 
     def reset(self):
-        self._timer.cancel()
-        self._run_timer()
+        self.stop()
+        self.start()
