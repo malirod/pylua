@@ -2,13 +2,13 @@
 
 import asyncio
 from gc import collect
-from pylua.network import send_and_wait_reply
+from pylua.network import send
 from pylua.network import run_websocket_server
 from lupa import LuaRuntime
 
 def send_get_echo_message(message, address='ws://localhost:8087'):
     loop = asyncio.get_event_loop()
-    result = loop.run_until_complete(send_and_wait_reply(message, address))
+    result = loop.run_until_complete(send(message, address))
     return result
 
 def prepare_server(address, port):

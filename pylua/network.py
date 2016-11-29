@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-import websockets
 from websockets import connect
+from websockets import serve
 
 async def server_task(websocket, dummy_path):
     message = await websocket.recv()
@@ -10,7 +10,7 @@ async def server_task(websocket, dummy_path):
     await websocket.send(response)
 
 def run_websocket_server(address='localhost', port=8087):
-    start_server = websockets.serve(server_task, address, port)
+    start_server = serve(server_task, address, port)
     asyncio.get_event_loop().run_until_complete(start_server)
 
 
@@ -36,8 +36,8 @@ class WebSocketClient:
         return response
 
 
-async def send_and_wait_reply(message, address):
-    async with WebSocketClient(address) as echo:
-        await echo.send(message)
-        result = await echo.receive()
+async def send(message, address):
+    async with WebSocketClient(address) as connection:
+        await connection.send(message)
+        result = await connection.receive()
         return result
