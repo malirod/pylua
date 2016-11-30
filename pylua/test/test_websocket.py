@@ -2,8 +2,7 @@
 
 import asyncio
 from gc import collect
-from pylua.network import send
-from pylua.network import run_websocket_server
+from pylua.network import send, run_websocket_server
 from lupa import LuaRuntime
 
 def send_get_echo_message(message, address='ws://localhost:8087'):

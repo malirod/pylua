@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
-from websockets import connect
-from websockets import serve
+from websockets import connect, serve
 
 async def server_task(websocket, dummy_path):
     message = await websocket.recv()
