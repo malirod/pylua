@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from gc import collect
 from pylua.validator import Validator
+from lupa import LuaRuntime
 
 class TestValidator(object):
 
@@ -23,31 +25,70 @@ class TestValidator(object):
 
     def __init__(self):
         self._validator = None
+        self._lua_runtime = None
 
     def setup(self):
         self._validator = Validator()
+        self._lua_runtime = LuaRuntime(unpack_returned_tuples=True)
         loaded = self._validator.load_schema_from_string(self._xml_schema)
+        self._lua_runtime.globals()['Validator'] = self._validator
         assert loaded
+
+    def teardown(self):
+        self._lua_runtime = None
+        collect()
 
     def test_load_invalid_xml(self):
         invalid_xml = '<root><sub-root></sub-root>'
         loaded = self._validator.load_schema_from_string(invalid_xml)
         assert not loaded
 
+    def test_load_invalid_xml_lua(self):
+        lua_code = '''\
+            local invalid_xml = '<root><sub-root></sub-root>'
+            local loaded = Validator.load_schema_from_string(invalid_xml)
+            assert(not loaded, "Expected to fail on invalid xml")
+            '''
+        self._lua_runtime.execute(lua_code)
+
     def test_not_found(self):
         code, error = self._validator.validate('get', 'response')
         assert code == 1
         assert error == 'Function not found'
+
+    def test_not_found_lua(self):
+        lua_code = '''\
+            local code, error = Validator.validate('get', 'response')
+            assert(code == 1)
+            assert(error == 'Function not found')
+            '''
+        self._lua_runtime.execute(lua_code)
 
     def test_ok_no_params(self):
         code, error = self._validator.validate('get', 'request')
         assert code == 0
         assert error == 'Ok'
 
+    def test_ok_no_params_lua(self):
+        lua_code = '''\
+            local code, error = Validator.validate('get', 'request')
+            assert(code == 0)
+            assert(error == 'Ok')
+            '''
+        self._lua_runtime.execute(lua_code)
+
     def test_ok_params(self):
         code, error = self._validator.validate('put', 'request', '{"some_string": "string_value"}')
         assert code == 0
         assert error == 'Ok'
+
+    def test_ok_params_lua(self):
+        lua_code = '''\
+            local code, error = Validator.validate('put', 'request', '{"some_string": "string_value"}')
+            assert(code == 0)
+            assert(error == 'Ok')
+            '''
+        self._lua_runtime.execute(lua_code)
 
     def test_error_params_wrong_name(self):
         code, error = self._validator.validate(
@@ -55,7 +96,23 @@ class TestValidator(object):
         assert code == 2
         assert error == 'Validation error'
 
+    def test_error_params_wrong_name_lua(self):
+        lua_code = '''\
+            local code, error = Validator.validate('put', 'request', '{"some_another_string": "string_value"}')
+            assert(code == 2)
+            assert(error == 'Validation error')
+            '''
+        self._lua_runtime.execute(lua_code)
+
     def test_error_wrong_function(self):
         code, error = self._validator.validate('delete', 'request')
         assert code == 1
         assert error == 'Function not found'
+
+    def test_error_wrong_function_lua(self):
+        lua_code = '''\
+            local code, error = Validator.validate('delete', 'request')
+            assert(code == 1)
+            assert(error == 'Function not found')
+            '''
+        self._lua_runtime.execute(lua_code)
