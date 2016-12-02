@@ -16,5 +16,7 @@ before_install:
 script:
   # Common style check
   - docker run --rm travis-build infrastructure/tools/checkstyle.sh $TRAVIS_COMMIT_RANGE
+  # Test whole project with pylint (can find issues in multiple files)
+  - docker run --rm travis-build /bin/bash -c "pylint --rcfile=.pylintrc ./pylua"
   # Run tests
   - docker run --rm travis-build /bin/bash -c "fab test_all"
