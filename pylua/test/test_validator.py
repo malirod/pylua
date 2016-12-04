@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from gc import collect
 from pylua.validator import Validator
-from lupa import LuaRuntime
+from pylua.test.mixin import LuaRuntimeMixin
 
-class TestValidator(object):
+class TestValidator(LuaRuntimeMixin):
 
     _xml_schema = '''\
         <root>
@@ -24,19 +23,18 @@ class TestValidator(object):
         '''
 
     def __init__(self):
+        super().__init__()
         self._validator = None
-        self._lua_runtime = None
 
     def setup(self):
+        super().setup()
         self._validator = Validator()
-        self._lua_runtime = LuaRuntime(unpack_returned_tuples=True)
         loaded = self._validator.load_schema_from_string(self._xml_schema)
-        self._lua_runtime.globals()['Validator'] = self._validator
+        self.lua_runtime.globals()['Validator'] = self._validator
         assert loaded
 
     def teardown(self):
-        self._lua_runtime = None
-        collect()
+        super().teardown()
 
     def test_load_invalid_xml(self):
         invalid_xml = '<root><sub-root></sub-root>'

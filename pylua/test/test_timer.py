@@ -1,28 +1,21 @@
 # -*- coding: utf-8 -*-
 
 import timeit
-import asyncio
-from gc import collect
 from pylua.timer import Timer, msec_to_sec
+from pylua.test.mixin import EventLoopMixin
 
-class TestTimer(object):
+class TestTimer(EventLoopMixin):
 
     def __init__(self):
+        super().__init__()
         self._interval_ms = 30
         self._timer = None
-        self._loop = asyncio.new_event_loop()
-        self._old_loop = None
 
     def setup(self):
-        self._loop = asyncio.new_event_loop()
-        self._old_loop = asyncio.get_event_loop()
-        asyncio.set_event_loop(self._loop)
+        super().setup()
 
     def teardown(self):
-        asyncio.set_event_loop(self._old_loop)
-        self._loop = None
-        self._old_loop = None
-        collect()
+        super().teardown()
 
     def test_start_timer(self):
         started = timeit.default_timer()
@@ -33,10 +26,10 @@ class TestTimer(object):
             delay = timeit.default_timer() - started
             assert delay >= msec_to_sec(self._interval_ms), "Timer doesn't work correctly"
             shot_counter += 1
-            self._loop.stop()
-        self._timer = Timer(task, self._interval_ms, loop=self._loop)
+            self.loop.stop()
+        self._timer = Timer(task, self._interval_ms, loop=self.loop)
         self._timer.start()
-        self._loop.run_forever()
+        self.loop.run_forever()
         assert shot_counter == 1, "Wrong number of tasks fired"
 
     def test_start_multiple_timers(self):
@@ -49,11 +42,11 @@ class TestTimer(object):
             assert delay >= msec_to_sec(self._interval_ms), "Timer doesn't work correctly"
             shot_counter += 1
             if shot_counter == timers_count:
-                self._loop.stop()
-        timers = [Timer(task, self._interval_ms, loop=self._loop) for _ in range(timers_count)]
+                self.loop.stop()
+        timers = [Timer(task, self._interval_ms, loop=self.loop) for _ in range(timers_count)]
         for timer in timers:
             timer.start()
-        self._loop.run_forever()
+        self.loop.run_forever()
         assert shot_counter == timers_count, "Wrong number of tasks fired"
 
     def test_stop_timer(self):
@@ -63,12 +56,12 @@ class TestTimer(object):
             nonlocal shot_counter
             shot_counter += 1
             if shot_counter == timers_count - 1:
-                self._loop.stop()
-        timers = [Timer(task, self._interval_ms, loop=self._loop) for _ in range(timers_count)]
+                self.loop.stop()
+        timers = [Timer(task, self._interval_ms, loop=self.loop) for _ in range(timers_count)]
         for timer in timers:
             timer.start()
         timers[0].stop()
-        self._loop.run_forever()
+        self.loop.run_forever()
         assert shot_counter == timers_count - 1, "Wrong number of tasks fired"
 
     def test_multishot_timer(self):
@@ -83,10 +76,10 @@ class TestTimer(object):
             shot_counter += 1
             started = timeit.default_timer()
             if shot_counter >= shots_count:
-                self._loop.stop()
-        self._timer = Timer(task, self._interval_ms, multishot=True, loop=self._loop)
+                self.loop.stop()
+        self._timer = Timer(task, self._interval_ms, multishot=True, loop=self.loop)
         self._timer.start()
-        self._loop.run_forever()
+        self.loop.run_forever()
         assert shot_counter == shots_count, "Wrong number of tasks fired"
 
     def test_reset_timer(self):
@@ -96,8 +89,8 @@ class TestTimer(object):
             shot_counter += 1
             self._timer.reset()
             if shot_counter >= 3:
-                self._loop.stop()
-        self._timer = Timer(task, self._interval_ms, multishot=False, loop=self._loop)
+                self.loop.stop()
+        self._timer = Timer(task, self._interval_ms, multishot=False, loop=self.loop)
         self._timer.start()
-        self._loop.run_forever()
+        self.loop.run_forever()
         assert shot_counter == 3, "Wrong number of tasks fired"
