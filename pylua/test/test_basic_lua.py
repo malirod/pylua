@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from gc import collect
-from lupa import LuaRuntime
 from pylua.lua import eval_lua_script, exec_lua_script, load_lua_script
-
+from pylua.test.mixin import LuaRuntimeMixin
 
 def create_data_producer(data):
     result = DataProducer(data)
     return result
-
 
 class DataProducer(object):
 
@@ -21,7 +18,6 @@ class DataProducer(object):
     def get_data(self):
         return self._data
 
-
 class TaskExecutor(object): # pylint: disable=too-few-public-methods
 
     def __init__(self, callback):
@@ -30,28 +26,26 @@ class TaskExecutor(object): # pylint: disable=too-few-public-methods
     def run(self):
         self._callback()
 
-
-class TestLuaBasic(object):
+class TestLuaBasic(LuaRuntimeMixin):
 
     def __init__(self):
-        self._lua_runtime = None
+        super().__init__()
 
     def setup(self):
-        self._lua_runtime = LuaRuntime()
+        super().setup()
 
     def teardown(self):
-        self._lua_runtime = None
-        collect()
+        super().teardown()
 
     def test_eval_local(self):
-        assert self._lua_runtime.eval('1+1') == 2
+        assert self.lua_runtime.eval('1+1') == 2
 
     @staticmethod
     def test_eval_global():
         assert eval_lua_script('1+1') == 2
 
     def test_factorial_local(self):
-        fac = self._lua_runtime.execute('''\
+        fac = self.lua_runtime.execute('''\
             function fac(i)
                 if i <= 1
                     then return 1
@@ -99,7 +93,7 @@ class TestLuaBasic(object):
         data_producer = create_data_producer('aaa')
         data_producer.add_to_data('bbb')
         assert data_producer.get_data() == 'aaabbb'
-        self._lua_runtime.globals()['create_data_producer'] = create_data_producer
+        self.lua_runtime.globals()['create_data_producer'] = create_data_producer
         lua_code = '''\
             function test()
                 local data_producer = create_data_producer('nnn')
@@ -108,7 +102,7 @@ class TestLuaBasic(object):
             end
             return test()
             '''
-        result = self._lua_runtime.execute(lua_code)
+        result = self.lua_runtime.execute(lua_code)
         assert result == 'nnnzzz'
 
     def test_callback_in_lua(self):
@@ -119,7 +113,7 @@ class TestLuaBasic(object):
         task_executor = TaskExecutor(py_callback)
         task_executor.run()
         assert py_data == 'aaa'
-        self._lua_runtime.globals()['TaskExecutor'] = TaskExecutor
+        self.lua_runtime.globals()['TaskExecutor'] = TaskExecutor
         lua_code = '''\
             function test()
                 local lua_data = 'zzz'
@@ -129,5 +123,5 @@ class TestLuaBasic(object):
             end
             return test()
             '''
-        result = self._lua_runtime.execute(lua_code)
+        result = self.lua_runtime.execute(lua_code)
         assert result == 'bbb'
