@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import json
@@ -6,8 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
-class TestJson:
+class TestJson(object):
 
     _JSON_STRING = '''{
         "IntParam": 10,
@@ -27,15 +25,16 @@ class TestJson:
         assert self._json_obj is not None
         assert isinstance(self._json_obj, dict)
 
-    def teardown(self):
+    @classmethod
+    def teardown(cls):
         logger.debug('Teardown')
 
     @classmethod
-    def setup_class(self):
+    def setup_class(cls):
         pass
 
     @classmethod
-    def teardown_class(self):
+    def teardown_class(cls):
         pass
 
     def test_int_param_py(self):
@@ -50,7 +49,7 @@ class TestJson:
     def test_string_param_py(self):
         assert 'StrParam' in self._json_obj
         value = self._json_obj['StrParam']
-        assert isinstance(value, basestring)
+        assert isinstance(value, str)
         assert value == 'TestString'
 
     def test_string_param_lua(self):
@@ -80,7 +79,7 @@ class TestJson:
         assert param == 11
         assert 'ObjStrParam' in value
         param = value['ObjStrParam']
-        assert isinstance(param, basestring)
+        assert isinstance(param, str)
         assert param == 'ObjTestString'
 
     def test_obj_param_lua(self):

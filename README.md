@@ -8,19 +8,15 @@ Example of binding between python and lua
 Ubuntu 14.04 LTS, 16.04 LTS
 
 ##Prerequisite
-- python 2.7
+- python 3.5.2
 
-`sudo apt install python2.7-dev python-pip`
+`sudo apt-get install python3-dev python3-pip python3-venv`
 
-- flake8
+- PyLint
 
-`sudo pip install flake8`
+`sudo apt-get install pylint`
 
-usage: `flake8 <file to check>`
-
-- virtualenv
-
-`sudo pip install virtualenv`
+usage(from project root to use config): `pylint <file to check>`
 
 - fabric
 
@@ -28,22 +24,24 @@ usage: `flake8 <file to check>`
 
 - lua 5.2
 
-`sudo apt install liblua5.2 liblua5.2-dev`
+`sudo apt-get install liblua5.2 liblua5.2-dev`
 
 ##Setup
+
 All further steps are performed in the project root
+
+Create virtual environment
+
+```
+. venv/bin/activate
+pip3 install --upgrade pip
+pip install wheel
+pip install -r requirements.txt
+
 
 Install git hooks
 
 `python ./tools/infrastructure/install_hooks.py`
-
-Create virtual environment
-
-`virtualenv venv`
-
-`. ./venv/bin/activate`
-
-`pip install -r requirements.txt`
 
 ##Usage
 To run all tests run
@@ -54,7 +52,13 @@ To run specific test or test case use
 
 `fab run_test:name=<file>:<Test_Case>.<test_method>`
 
-##Python & Lua binding
-Binding is implemented with help of [lupa library](https://pypi.python.org/pypi/lupa)
+##Code validation
+Style check is performed with script `./tools/infrastructure/checkstyle.sh`
 
-Read it's manual to know how it works.
+Usage
+
+`./tools/infrastructure/checkstyle.sh <begin_sha>..<end_sha>`
+
+e.g.
+
+`./tools/infrastructure/checkstyle.sh 6c18cbb..HEAD`
