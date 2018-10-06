@@ -5,9 +5,10 @@ import os
 
 LUA_RUNTIME = None
 
+
 def get_lua_runtime():
     from lupa import LuaRuntime
-    global LUA_RUNTIME # pylint: disable=global-statement
+    global LUA_RUNTIME  # pylint: disable=global-statement
     if LUA_RUNTIME is None:
         LUA_RUNTIME = LuaRuntime()
     return LUA_RUNTIME
@@ -15,14 +16,14 @@ def get_lua_runtime():
 
 def load_lua_script(lua_script_name):
     python_path = sys.path
-    lua_scipt_full_name = lua_script_name + '.lua'
-    lua_scipt_full_path = None
+    lua_script_full_name = lua_script_name + '.lua'
+    lua_script_full_path = None
     for path_item in python_path:
         for root, _, files in os.walk(path_item):
             for file in files:
-                if lua_scipt_full_name == file:
-                    lua_scipt_full_path = os.path.join(root, file)
-    with open(lua_scipt_full_path) as lua_script_file:
+                if lua_script_full_name == file:
+                    lua_script_full_path = os.path.join(root, file)
+    with open(lua_script_full_path) as lua_script_file:
         content = lua_script_file.read()
     return content
 

@@ -59,6 +59,6 @@ EOF
     exit 1
 fi
 
-infrastructure/tools/checkstyle.sh --cached
+tools/checkstyle.sh --cached
 
 exit $?

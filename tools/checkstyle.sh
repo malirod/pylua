@@ -11,8 +11,8 @@ COMMITS_RANGE=$1
 if [ -n "$COMMITS_RANGE" ]; then
   echo "Processing commits range: $COMMITS_RANGE"
 else
-  echo ${TEXT_ERROR}"No commits provided"${TEXT_DEFAULT}
-  exit 1
+  echo ${TEXT_ERROR}"No commits provided. HEAD is used."${TEXT_DEFAULT}
+  COMMITS_RANGE="HEAD"
 fi
 
 ##################################################################
@@ -21,10 +21,10 @@ fi
 
 echo -e "$TEXT_INFO" "Checking script encoding" "$TEXT_DEFAULT"
 
-PYTHON_FILES_NUMBER=$(git diff $COMMITS_RANGE --name-only -M | grep -e '\.py$' | wc -l)
+PYTHON_FILES_NUMBER=$(find pylua -type f \( -iname "*.py" \) | wc -l)
 if [ "$PYTHON_FILES_NUMBER" -ne "0" ]; then
     PYTHON_ENCODING_HEADER="utf-8"
-    PYTHON_CODE_PAGE_MATCHES=$(head -n2 $(git diff $COMMITS_RANGE --name-only -M | grep -e '\.py$') | grep -i $PYTHON_ENCODING_HEADER | wc -l)
+    PYTHON_CODE_PAGE_MATCHES=$(head -n2 $(find pylua -type f \( -iname "*.py" \)) | grep -i $PYTHON_ENCODING_HEADER | wc -l)
 
     if [ "$PYTHON_CODE_PAGE_MATCHES" -ne "$PYTHON_FILES_NUMBER" ]; then
         echo -e "${TEXT_ERROR}Some python file(s) have wrong encoding. Expected is:${TEXT_DEFAULT} ${TEXT_BOLD} $PYTHON_ENCODING_HEADER ${TEXT_DEFAULT}"
@@ -55,7 +55,7 @@ echo -e "$TEXT_INFO" "PASSED" "$TEXT_DEFAULT"
 
 echo -e "$TEXT_INFO" "Checking python style with pylint" "$TEXT_DEFAULT"
 
-PYTHON_FILES=$(git diff $COMMITS_RANGE --name-only --diff-filter=ACM | grep -e "\.py$")
+PYTHON_FILES=$(find pylua -type f \( -iname "*.py" \))
 echo -e "$TEXT_DEFAULT" "The following files will be processed" "$TEXT_DEFAULT"
 echo -e "$TEXT_DEFAULT" $PYTHON_FILES "$TEXT_DEFAULT"
 

@@ -4,10 +4,12 @@ import timeit
 from pylua.timer import Timer, msec_to_sec
 from pylua.test.mixin import EventLoopMixin, LuaRuntimeMixin
 
+
 class TestTimer(EventLoopMixin, LuaRuntimeMixin):
 
     def __init__(self):
-        super().__init__()
+        EventLoopMixin.__init__(self)
+        LuaRuntimeMixin.__init__(self)
 
     def setup(self):
         super().setup()
@@ -17,7 +19,7 @@ class TestTimer(EventLoopMixin, LuaRuntimeMixin):
         self.lua_runtime.globals()['msec_to_sec'] = msec_to_sec
 
     def teardown(self):
-        super().teardown()
+        pass
 
     def test_start_timer(self):
         lua_code = '''\
@@ -37,7 +39,6 @@ class TestTimer(EventLoopMixin, LuaRuntimeMixin):
             assert(shot_counter == 1, "Wrong number of tasks fired")
             '''
         self.lua_runtime.execute(lua_code)
-
 
     def test_start_multiple_timers(self):
         lua_code = '''\

@@ -15,7 +15,7 @@ def sec_to_msec(seconds):
     return seconds*milliseconds_in_second
 
 
-class Timer(object):
+class Timer:
 
     def __init__(self, task, interval, multishot=False, loop=None):
         self._multishot = multishot

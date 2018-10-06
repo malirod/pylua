@@ -3,11 +3,13 @@
 from pylua.lua import eval_lua_script, exec_lua_script, load_lua_script
 from pylua.test.mixin import LuaRuntimeMixin
 
+
 def create_data_producer(data):
     result = DataProducer(data)
     return result
 
-class DataProducer(object):
+
+class DataProducer:
 
     def __init__(self, initial_data):
         self._data = initial_data
@@ -18,7 +20,8 @@ class DataProducer(object):
     def get_data(self):
         return self._data
 
-class TaskExecutor(object): # pylint: disable=too-few-public-methods
+
+class TaskExecutor:  # pylint: disable=too-few-public-methods
 
     def __init__(self, callback):
         self._callback = callback
@@ -26,16 +29,17 @@ class TaskExecutor(object): # pylint: disable=too-few-public-methods
     def run(self):
         self._callback()
 
+
 class TestLuaBasic(LuaRuntimeMixin):
 
     def __init__(self):
-        super().__init__()
+        LuaRuntimeMixin.__init__(self)
 
     def setup(self):
-        super().setup()
+        LuaRuntimeMixin.setup(self)
 
     def teardown(self):
-        super().teardown()
+        LuaRuntimeMixin.teardown(self)
 
     def test_eval_local(self):
         assert self.lua_runtime.eval('1+1') == 2
@@ -93,7 +97,8 @@ class TestLuaBasic(LuaRuntimeMixin):
         data_producer = create_data_producer('aaa')
         data_producer.add_to_data('bbb')
         assert data_producer.get_data() == 'aaabbb'
-        self.lua_runtime.globals()['create_data_producer'] = create_data_producer
+        self.lua_runtime.globals(
+        )['create_data_producer'] = create_data_producer
         lua_code = '''\
             function test()
                 local data_producer = create_data_producer('nnn')
@@ -107,6 +112,7 @@ class TestLuaBasic(LuaRuntimeMixin):
 
     def test_callback_in_lua(self):
         py_data = None
+
         def py_callback():
             nonlocal py_data
             py_data = 'aaa'

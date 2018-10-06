@@ -11,7 +11,7 @@ def setup_working_dir():
     outside). Set it to the project root.
     """
     os.chdir(os.path.join(os.path.dirname(
-        os.path.realpath(__file__)), os.pardir, os.pardir))
+        os.path.realpath(__file__)), os.pardir))
 
 
 def run_cmd(cmd_line):

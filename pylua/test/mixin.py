@@ -4,9 +4,10 @@ import asyncio
 from gc import collect
 from lupa import LuaRuntime
 
-class BaseFixture(object):
+
+class BaseFixture:
     def __init__(self):
-        super().__init__()
+        pass
 
     def setup(self):
         pass
@@ -14,10 +15,11 @@ class BaseFixture(object):
     def teardown(self):
         pass
 
+
 class EventLoopMixin(BaseFixture):
 
     def __init__(self):
-        super().__init__()
+        BaseFixture.__init__(self)
         self._loop = None
         self._old_loop = None
 
@@ -36,6 +38,7 @@ class EventLoopMixin(BaseFixture):
     @property
     def loop(self):
         return self._loop
+
 
 class LuaRuntimeMixin(BaseFixture):
 
