@@ -1,49 +1,47 @@
+# pylua
+
 [![Build Status](https://travis-ci.org/malirod/pylua.svg?branch=master)](https://travis-ci.org/malirod/pylua)
 
-# pylua
 Example of binding between python and lua
 
-##Platform
+## Platform
 
-Ubuntu 14.04 LTS, 16.04 LTS
+Ubuntu 18.04 LTS
 
-##Prerequisite
-- python 3.5.2
+## Prerequisite
 
-`sudo apt-get install python3-dev python3-pip python3-venv`
+- python 3 (3.6.6)
 
-- PyLint
-
-`sudo apt-get install pylint`
-
-usage(from project root to use config): `pylint <file to check>`
+`sudo apt install python3-dev python3-pip python3-venv`
 
 - fabric
 
 `sudo pip install fabric`
 
-- lua 5.2
+- lua 5.3
 
-`sudo apt-get install liblua5.2 liblua5.2-dev`
+`sudo apt install liblua5.3 liblua5.3-dev`
 
-##Setup
+## Setup
 
 All further steps are performed in the project root
 
 Create virtual environment
 
-```
-. venv/bin/activate
+```bash
+python3.6 -m venv venv
+source venv/bin/activate
 pip3 install --upgrade pip
 pip install wheel
 pip install -r requirements.txt
-
+```
 
 Install git hooks
 
-`python ./tools/infrastructure/install_hooks.py`
+`python ./tools/install_hooks.py`
 
-##Usage
+## Usage
+
 To run all tests run
 
 `fab test_all`
@@ -52,13 +50,6 @@ To run specific test or test case use
 
 `fab run_test:name=<file>:<Test_Case>.<test_method>`
 
-##Code validation
-Style check is performed with script `./tools/infrastructure/checkstyle.sh`
+## Code validation
 
-Usage
-
-`./tools/infrastructure/checkstyle.sh <begin_sha>..<end_sha>`
-
-e.g.
-
-`./tools/infrastructure/checkstyle.sh 6c18cbb..HEAD`
+Style check is performed with script `./tools/checkstyle.sh`

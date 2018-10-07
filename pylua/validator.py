@@ -3,12 +3,13 @@
 import xml.etree.ElementTree as etree
 from json import JSONDecoder
 
-class Validator(object):
+
+class Validator:
 
     _errors = [(0, 'Ok'), (1, "Function not found"), (2, "Validation error")]
-    _error_indx_ok = 0
-    _error_indx_not_found = 1
-    _error_indx_error = 2
+    _error_index_ok = 0
+    _error_index_not_found = 1
+    _error_index_error = 2
 
     def __init__(self):
         self._schema = None
@@ -37,9 +38,9 @@ class Validator(object):
         schema_params = function_item.findall('param')
         is_schema_params_empty = len(schema_params) == 0
         if not is_schema_params_empty and params is None:
-            return self._errors[self._error_indx_error]
+            return self._errors[self._error_index_error]
         if is_schema_params_empty and params is None:
-            return self._errors[self._error_indx_ok]
+            return self._errors[self._error_index_ok]
         for param in schema_params:
             validated = self._validate_param(
                 param.get('name'),
@@ -47,9 +48,9 @@ class Validator(object):
                 param.get('type'),
                 params)
             if not validated:
-                return self._errors[self._error_indx_error]
+                return self._errors[self._error_index_error]
 
-        return self._errors[self._error_indx_ok]
+        return self._errors[self._error_index_ok]
 
     def validate(self, function_id, function_type, params=None):
         assert function_id is not None
@@ -59,4 +60,4 @@ class Validator(object):
             if (function_id == function_item.get('id')
                     and function_type == function_item.get('type')):
                 return self._validate(function_item, params)
-        return self._errors[self._error_indx_not_found]
+        return self._errors[self._error_index_not_found]

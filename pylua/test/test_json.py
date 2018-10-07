@@ -5,7 +5,8 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class TestJson(object):
+
+class TestJson:
 
     _JSON_STRING = '''{
         "IntParam": 10,

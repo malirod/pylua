@@ -3,6 +3,7 @@
 from pylua.validator import Validator
 from pylua.test.mixin import LuaRuntimeMixin
 
+
 class TestValidator(LuaRuntimeMixin):
 
     _xml_schema = '''\
@@ -34,7 +35,7 @@ class TestValidator(LuaRuntimeMixin):
         assert loaded
 
     def teardown(self):
-        super().teardown()
+        LuaRuntimeMixin.teardown(self)
 
     def test_load_invalid_xml(self):
         invalid_xml = '<root><sub-root></sub-root>'
@@ -76,7 +77,8 @@ class TestValidator(LuaRuntimeMixin):
         self._lua_runtime.execute(lua_code)
 
     def test_ok_params(self):
-        code, error = self._validator.validate('put', 'request', '{"some_string": "string_value"}')
+        code, error = self._validator.validate(
+            'put', 'request', '{"some_string": "string_value"}')
         assert code == 0
         assert error == 'Ok'
 

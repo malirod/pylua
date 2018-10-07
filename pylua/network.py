@@ -3,10 +3,12 @@
 import asyncio
 from websockets import connect, serve
 
-async def server_task(websocket, dummy_path):
+
+async def server_task(websocket, _):
     message = await websocket.recv()
     response = message
     await websocket.send(response)
+
 
 def run_websocket_server(address='localhost', port=8087):
     start_server = serve(server_task, address, port)
