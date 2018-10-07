@@ -7,19 +7,17 @@ from pylua.test.mixin import EventLoopMixin, LuaRuntimeMixin
 
 class TestTimer(EventLoopMixin, LuaRuntimeMixin):
 
-    def __init__(self):
-        EventLoopMixin.__init__(self)
-        LuaRuntimeMixin.__init__(self)
-
     def setup(self):
-        super().setup()
+        EventLoopMixin.setup(self)
+        LuaRuntimeMixin.setup(self)
         self.lua_runtime.globals()['Timer'] = Timer
         self.lua_runtime.globals()['event_loop'] = self.loop
         self.lua_runtime.globals()['now'] = timeit.default_timer
         self.lua_runtime.globals()['msec_to_sec'] = msec_to_sec
 
     def teardown(self):
-        pass
+        LuaRuntimeMixin.setup(self)
+        EventLoopMixin.setup(self)
 
     def test_start_timer(self):
         lua_code = '''\

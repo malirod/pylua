@@ -7,10 +7,7 @@ from pylua.test.mixin import EventLoopMixin
 
 class TestTimer(EventLoopMixin):
 
-    def __init__(self):
-        super().__init__()
-        self._interval_ms = 30
-        self._timer = None
+    _interval_ms = 30
 
     def setup(self):
         EventLoopMixin.setup(self)
@@ -30,8 +27,8 @@ class TestTimer(EventLoopMixin):
                 self._interval_ms), "Timer doesn't work correctly"
             shot_counter += 1
             self.loop.stop()
-        self._timer = Timer(task, self._interval_ms, loop=self.loop)
-        self._timer.start()
+        timer = Timer(task, self._interval_ms, loop=self.loop)
+        timer.start()
         self.loop.run_forever()
         assert shot_counter == 1, "Wrong number of tasks fired"
 
@@ -87,9 +84,9 @@ class TestTimer(EventLoopMixin):
             started = timeit.default_timer()
             if shot_counter >= shots_count:
                 self.loop.stop()
-        self._timer = Timer(task, self._interval_ms,
-                            multishot=True, loop=self.loop)
-        self._timer.start()
+        timer = Timer(task, self._interval_ms,
+                      multishot=True, loop=self.loop)
+        timer.start()
         self.loop.run_forever()
         assert shot_counter == shots_count, "Wrong number of tasks fired"
 
@@ -99,11 +96,11 @@ class TestTimer(EventLoopMixin):
         def task():
             nonlocal shot_counter
             shot_counter += 1
-            self._timer.reset()
+            timer.reset()
             if shot_counter >= 3:
                 self.loop.stop()
-        self._timer = Timer(task, self._interval_ms,
-                            multishot=False, loop=self.loop)
-        self._timer.start()
+        timer = Timer(task, self._interval_ms,
+                      multishot=False, loop=self.loop)
+        timer.start()
         self.loop.run_forever()
         assert shot_counter == 3, "Wrong number of tasks fired"

@@ -32,14 +32,11 @@ class TaskExecutor:  # pylint: disable=too-few-public-methods
 
 class TestLuaBasic(LuaRuntimeMixin):
 
-    def __init__(self):
-        LuaRuntimeMixin.__init__(self)
-
     def setup(self):
         LuaRuntimeMixin.setup(self)
 
     def teardown(self):
-        LuaRuntimeMixin.teardown(self)
+        LuaRuntimeMixin.teardown()
 
     def test_eval_local(self):
         assert self.lua_runtime.eval('1+1') == 2

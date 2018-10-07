@@ -11,8 +11,9 @@ async def server_task(websocket, _):
 
 
 def run_websocket_server(address='localhost', port=8087):
-    start_server = serve(server_task, address, port)
-    asyncio.get_event_loop().run_until_complete(start_server)
+    server = serve(server_task, address, port)
+    asyncio.get_event_loop().run_until_complete(server)
+    return server
 
 
 class WebSocketClient:
