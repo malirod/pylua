@@ -23,19 +23,17 @@ class TestValidator(LuaRuntimeMixin):
         </root>
         '''
 
-    def __init__(self):
-        super().__init__()
-        self._validator = None
+    _validator = None
 
     def setup(self):
-        super().setup()
+        LuaRuntimeMixin.setup(self)
         self._validator = Validator()
         loaded = self._validator.load_schema_from_string(self._xml_schema)
         self.lua_runtime.globals()['Validator'] = self._validator
         assert loaded
 
     def teardown(self):
-        LuaRuntimeMixin.teardown(self)
+        LuaRuntimeMixin.teardown()
 
     def test_load_invalid_xml(self):
         invalid_xml = '<root><sub-root></sub-root>'

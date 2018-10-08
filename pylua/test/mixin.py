@@ -5,54 +5,28 @@ from gc import collect
 from lupa import LuaRuntime
 
 
-class BaseFixture:
-    def __init__(self):
-        pass
+class EventLoopMixin:
 
     def setup(self):
-        pass
-
-    def teardown(self):
-        pass
-
-
-class EventLoopMixin(BaseFixture):
-
-    def __init__(self):
-        BaseFixture.__init__(self)
-        self._loop = None
-        self._old_loop = None
-
-    def setup(self):
-        super().setup()
         self._loop = asyncio.new_event_loop()
         self._old_loop = asyncio.get_event_loop()
         asyncio.set_event_loop(self._loop)
 
     def teardown(self):
-        super().teardown()
         asyncio.set_event_loop(self._old_loop)
-        self._loop = None
-        self._old_loop = None
 
     @property
     def loop(self):
         return self._loop
 
 
-class LuaRuntimeMixin(BaseFixture):
-
-    def __init__(self):
-        super().__init__()
-        self._lua_runtime = None
+class LuaRuntimeMixin:
 
     def setup(self):
-        super().setup()
         self._lua_runtime = LuaRuntime(unpack_returned_tuples=True)
 
-    def teardown(self):
-        super().teardown()
-        self._lua_runtime = None
+    @staticmethod
+    def teardown():
         collect()
 
     @property

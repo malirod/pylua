@@ -17,9 +17,6 @@ class TestJson:
 
     _json_obj = None
 
-    def __init__(self):
-        pass
-
     def setup(self):
         logger.debug('Setup')
         self._json_obj = json.loads(self._JSON_STRING)

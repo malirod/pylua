@@ -14,10 +14,6 @@ Ubuntu 18.04 LTS
 
 `sudo apt install python3-dev python3-pip python3-venv`
 
-- fabric
-
-`sudo pip install fabric`
-
 - lua 5.3
 
 `sudo apt install liblua5.3 liblua5.3-dev`
@@ -44,11 +40,7 @@ Install git hooks
 
 To run all tests run
 
-`fab test_all`
-
-To run specific test or test case use
-
-`fab run_test:name=<file>:<Test_Case>.<test_method>`
+`pytest`
 
 ## Code validation
 
