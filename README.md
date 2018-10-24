@@ -6,11 +6,11 @@ Example of binding between python and lua
 
 ## Platform
 
-Ubuntu 18.04 LTS
+Ubuntu 18.10
 
 ## Prerequisite
 
-- python 3 (3.6.6)
+- python 3 (3.6.7)
 
 `sudo apt install python3-dev python3-pip python3-venv`
 
@@ -25,7 +25,7 @@ All further steps are performed in the project root
 Create virtual environment
 
 ```bash
-python3.6 -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 pip3 install --upgrade pip
 pip install wheel
